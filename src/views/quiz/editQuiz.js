@@ -9,6 +9,12 @@ class EditQuiz extends Component {
     super(props);
     this.state = {
       editQuestionIndex: -1,
+      newQuestion: false,
+      question: {
+        title: "",
+        options: [],
+        answers: [],
+      },
     };
   }
 
@@ -30,7 +36,9 @@ class EditQuiz extends Component {
   reportOnUpdate = (index) => {
     this.setState({ editQuestionIndex: -1, updatedQuestionIndex: index });
   };
-
+  reportOnAddingNewQuestion = () => {
+    this.setState({ newQuestion: !this.state.newQuestion });
+  };
   render() {
     console.log(this.props.quiz);
     const quiz = this.props.quiz;
@@ -47,43 +55,70 @@ class EditQuiz extends Component {
 
               <div className="jumbotron mt-6 ml-6 mr-6">
                 <div className="row">
-                  <div className="col mx-auto">
-                    {quiz.questions.map((question, i) => {
-                      return (
-                        <div className="col-md-6" key={i}>
-                          {this.state.editQuestionIndex === i ? (
-                            <QuestionForm
-                              key={i}
-                              questionIndex={i}
-                              question={question}
-                              syncQuestion={false}
-                              isInvalidQuestion={false}
-                              deleteQuestion={() => {}}
-                              hideDeleteButton={true}
-                              isBeingUpdated={true}
-                              reportOnUpdate={this.reportOnUpdate}
-                            />
-                          ) : (
-                            <>
-                              {this.state.updatedQuestionIndex == i ? (
-                                <p className="success">Saved Successfully.</p>
-                              ) : null}
-                              <h4> Q: {question.title}</h4>
-                              <div className="row">
-                                <button
-                                  onClick={() =>
-                                    this.openEditForm(question, i)
-                                  }>
-                                  Edit
-                                </button>
-                                <button>delete</button>
-                              </div>
-                            </>
-                          )}
-                        </div>
-                      );
-                    })}
-                  </div>
+                  {this.state.newQuestion ? (
+                    <QuestionForm
+                      question={this.state.question}
+                      syncQuestion={false}
+                      isInvalidQuestion={false}
+                      deleteQuestion={() => {}}
+                      hideDeleteButton={true}
+                      isBeingUpdated={false}
+                      addingNewQuestion={true}
+                      reportOnAddingNewQuestion={this.reportOnAddingNewQuestion}
+                      quizId={this.props.match.params.id}
+                    />
+                  ) : (
+                    <div className="col mx-auto">
+                      {quiz.questions.map((question, i) => {
+                        return (
+                          <div className="col-md-6" key={i}>
+                            {this.state.editQuestionIndex === i ? (
+                              <QuestionForm
+                                key={i}
+                                questionIndex={i}
+                                question={question}
+                                syncQuestion={false}
+                                isInvalidQuestion={false}
+                                deleteQuestion={() => {}}
+                                hideDeleteButton={true}
+                                isBeingUpdated={true}
+                                reportOnUpdate={this.reportOnUpdate}
+                              />
+                            ) : (
+                              <>
+                                {this.state.updatedQuestionIndex == i ? (
+                                  <p className="success">Saved Successfully.</p>
+                                ) : null}
+                                <h4> Q: {question.title}</h4>
+                                <div className="row">
+                                  <button
+                                    className="btn btn-warning mx-3"
+                                    onClick={() =>
+                                      this.openEditForm(question, i)
+                                    }>
+                                    Edit
+                                  </button>
+                                  <button className="btn btn-danger mx-3">
+                                    Delete
+                                  </button>
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        );
+                      })}
+                      {this.state.editQuestionIndex ? (
+                        <button
+                          className="btn btn-warning m-3"
+                          onClick={this.reportOnAddingNewQuestion}>
+                          {" "}
+                          Add New Question
+                        </button>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

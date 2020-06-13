@@ -1,7 +1,10 @@
 import React from "react";
 import { connect } from "react-redux";
 import { isValidQuestion } from "../../utils/index";
-import { updateQuestion } from "../../state/actions/quizActions";
+import {
+  updateQuestion,
+  addNewQuestion,
+} from "../../state/actions/quizActions";
 
 class QuestionForm extends React.Component {
   constructor(props) {
@@ -36,6 +39,7 @@ class QuestionForm extends React.Component {
       },
       () => {
         this.syncQuestion();
+        this.setState({ isInvalidQuestion: false });
       }
     );
   };
@@ -45,6 +49,7 @@ class QuestionForm extends React.Component {
     options[index] = e.target.value;
     this.setState({ options }, () => {
       this.syncQuestion();
+      this.setState({ isInvalidQuestion: false });
     });
   };
 
@@ -64,6 +69,7 @@ class QuestionForm extends React.Component {
 
     this.setState({ correctOptionsIndex, answers }, () => {
       this.syncQuestion();
+      this.setState({ isInvalidQuestion: false });
     });
   };
 
@@ -97,6 +103,22 @@ class QuestionForm extends React.Component {
       this.props.reportOnUpdate(this.props.questionIndex);
 
     // send an update to parent
+  };
+  submitNewQuestion = () => {
+    let quizId = this.props.quizId;
+    const question = {
+      quizId,
+      title: this.state.title,
+      options: this.state.options,
+      answers: this.state.answers,
+    };
+
+    if (!isValidQuestion(question)) {
+      return this.setState({ isInvalidQuestion: true });
+    }
+    this.props.dispatch(addNewQuestion({ question }));
+    this.props.reportOnAddingNewQuestion();
+    console.log(question);
   };
 
   render() {
@@ -166,6 +188,13 @@ class QuestionForm extends React.Component {
 
           {this.props.isBeingUpdated ? (
             <button onClick={this.updateQuestion}>Update</button>
+          ) : null}
+          {this.props.addingNewQuestion ? (
+            <button
+              onClick={this.submitNewQuestion}
+              className="btn btn-primary">
+              Add
+            </button>
           ) : null}
         </div>
       </div>

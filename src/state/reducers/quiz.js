@@ -22,6 +22,19 @@ function Quiz(state = intialState, action) {
           ),
         },
       };
+    case "ADD_NEW_QUIZ_QUESTION":
+      return {
+        ...state,
+        quizList: {
+          ...state.quizList,
+          quizzes: state.quizList.quizzes.map((quiz) => {
+            if (quiz._id == action.payload._id) {
+              return quiz.quesions.push(action.payload);
+            }
+            return quiz;
+          }),
+        },
+      };
     default:
       return state;
   }

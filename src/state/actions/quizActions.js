@@ -62,6 +62,20 @@ const updateQuestion = (id, data) => {
     } catch (error) {}
   };
 };
+const addNewQuestion = (data) => {
+  return async (dispatch) => {
+    try {
+      // dispatch({ type: "FETCH_CURRENT_USER_START" });
+
+      let quiz = await axios.post(`${url}/questions`, data);
+      console.log(quiz);
+      dispatch({
+        type: "ADD_NEW_QUIZ_QUESTION",
+        payload: quiz.question,
+      });
+    } catch (error) {}
+  };
+};
 
 const deleteQuiz = (id) => {
   // console.log("in action");
@@ -76,4 +90,11 @@ const deleteQuiz = (id) => {
   };
 };
 
-export { createQuiz, quizList, showQuiz, deleteQuiz, updateQuestion };
+export {
+  createQuiz,
+  quizList,
+  showQuiz,
+  deleteQuiz,
+  updateQuestion,
+  addNewQuestion,
+};
