@@ -2,12 +2,13 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { showQuiz } from "../../state/actions/quizActions";
 import QuestionForm from "./QuestionForm";
-// import {EditQuestion} from ""
+import { deleteQuestion , changeQuizTitle ,updateQuizTitle } from "../../state/actions/quizActions";
 
 class EditQuiz extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      // title : this.props.quiz || "" ,
       editQuestionIndex: -1,
       newQuestion: false,
       question: {
@@ -15,12 +16,14 @@ class EditQuiz extends Component {
         options: [],
         answers: [],
       },
+      editTitleStatus : false
     };
   }
 
   componentDidMount() {
     let quizId = this.props.match.params.id;
     this.props.dispatch(showQuiz(quizId));
+  
   }
 
   openEditForm = (question, index) => {
@@ -29,28 +32,46 @@ class EditQuiz extends Component {
     });
   };
 
-  syncQuestion = () => {};
+  // syncQuestion = () => {};
 
-  deleteQuestion = () => {};
+  // deleteQuestion = () => {};
 
   reportOnUpdate = (index) => {
     this.setState({ editQuestionIndex: -1, updatedQuestionIndex: index });
   };
+
   reportOnAddingNewQuestion = () => {
     this.setState({ newQuestion: !this.state.newQuestion });
   };
-  render() {
-    console.log(this.props.quiz);
-    const quiz = this.props.quiz;
 
+
+  handelChangeQuizTitle = (e) =>{
+    this.props.dispatch(changeQuizTitle(e.target.value));
+    if(this.state.editTitleStatus){
+      this.setState({editTitleStatus : false});
+    }
+  }
+
+  handelQuizTitleUpdate = (id) =>{
+     this.props.dispatch(updateQuizTitle(id , this.props.quiz.title));
+     this.setState({ editTitleStatus : true });
+  }
+
+  handelDeleteQuiz = (question) =>{
+    this.props.dispatch(deleteQuestion(question._id));
+  }
+
+  render() {
+    const quiz = this.props.quiz;
     return (
       <>
         {quiz ? (
           <>
             <div className="container mt-4">
               <div>
-                <input type="text" value={quiz.title} />
-                <button>Save</button>
+                {this.state.editTitleStatus ? <p> Title updated Successfully </p> : null }
+                <input type="text" name="title" onChange = {this.handelChangeQuizTitle} value={quiz.title } />
+                <button onClick = {()=>this.handelQuizTitleUpdate(quiz._id)} >Save</button>
               </div>
 
               <div className="jumbotron mt-6 ml-6 mr-6">
@@ -98,7 +119,9 @@ class EditQuiz extends Component {
                                     }>
                                     Edit
                                   </button>
-                                  <button className="btn btn-danger mx-3">
+                                  <button  onClick={() =>{
+                                    this.handelDeleteQuiz(question)
+                                  }}  className="btn btn-danger mx-3">
                                     Delete
                                   </button>
                                 </div>

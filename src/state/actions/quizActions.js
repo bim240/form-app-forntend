@@ -68,14 +68,30 @@ const addNewQuestion = (data) => {
       // dispatch({ type: "FETCH_CURRENT_USER_START" });
 
       let quiz = await axios.post(`${url}/questions`, data);
-      console.log(quiz);
+
+      // console.log(quiz.data.question);
       dispatch({
         type: "ADD_NEW_QUIZ_QUESTION",
-        payload: quiz.question,
+        payload: quiz.data.question,
       });
     } catch (error) {}
   };
 };
+
+const deleteQuestion = (id) => {
+  return async (dispatch) =>{
+    try {
+       await axios.delete(`${url}/questions/${id}`);  
+       dispatch({
+        type: "DELETE_QUESTION",
+        payload: id,
+      });
+    } catch (error) {
+       
+    }
+  }
+
+}
 
 const deleteQuiz = (id) => {
   // console.log("in action");
@@ -90,6 +106,27 @@ const deleteQuiz = (id) => {
   };
 };
 
+const changeQuizTitle = (title) => {
+    return {
+      type: "CHANGE_QUIZ_TITLE",
+      payload:  title,
+      }
+};
+
+const updateQuizTitle = (id , title) =>{
+  return async (dispatch ) => {
+    try {
+     let updatedQuiz = await axios.put(`${url}/quiz/${id}` ,{ quiz : { title } } );
+      let quizTitle =  updatedQuiz.data.updatedQuizTitle.title;
+      dispatch({
+        type: "UPDATE_QUIZ_TITLE",
+        payload: quizTitle
+      });
+    } catch (error) {}
+  };
+}
+
+
 export {
   createQuiz,
   quizList,
@@ -97,4 +134,7 @@ export {
   deleteQuiz,
   updateQuestion,
   addNewQuestion,
+  deleteQuestion,
+  changeQuizTitle,
+  updateQuizTitle
 };

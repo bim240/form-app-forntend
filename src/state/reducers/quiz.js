@@ -12,7 +12,6 @@ function Quiz(state = intialState, action) {
     case "FETCH_QUIZ":
       return { ...state, quiz: action.payload };
     case "DELETE_QUIZ":
-      console.log(state.quizList);
       return {
         ...state,
         quizList: {
@@ -22,17 +21,40 @@ function Quiz(state = intialState, action) {
           ),
         },
       };
-    case "ADD_NEW_QUIZ_QUESTION":
+    case "DELETE_QUESTION" :
       return {
         ...state,
-        quizList: {
-          ...state.quizList,
-          quizzes: state.quizList.quizzes.map((quiz) => {
-            if (quiz._id == action.payload._id) {
-              return quiz.quesions.push(action.payload);
-            }
-            return quiz;
-          }),
+        quiz : {
+          ...state.quiz,
+          questions : state.quiz.questions.filter((question) => question._id !== action.payload)
+      }
+    }
+
+    // just change quiz title  but not update to backend
+     case "CHANGE_QUIZ_TITLE" : 
+    return {
+      ...state ,
+      quiz : {
+        ...state.quiz,
+        title : action.payload
+      }
+    }
+    case "UPDATE_QUIZ_TITLE": 
+    return {
+       ...state,
+       quiz : {
+         ...state.quiz,
+         title : action.payload
+       }
+    }
+      
+    case "ADD_NEW_QUIZ_QUESTION":
+      console.log(action.payload , state.quiz.questions);
+      return {
+        ...state,
+        quiz: {
+          ...state.quiz,
+           questions : [...state.quiz.questions , action.payload]
         },
       };
     default:
