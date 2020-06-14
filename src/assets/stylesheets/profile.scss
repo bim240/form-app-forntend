@@ -1,0 +1,27 @@
+.profile-and-quizzes-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.profile-to-be-form-container {
+  // border: 1px solid black;
+  display: flex;
+  border-left: 2px solid black;
+}
+
+
+form {
+  display: flex;
+  flex-direction: column;
+  padding:20px;
+}
+
+.center {
+  align-self: center;
+}
+
+.edit-profile-button {
+  font-size: 20px;
+  padding: 10px;
+  cursor: pointer;
+}
