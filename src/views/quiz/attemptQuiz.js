@@ -55,6 +55,7 @@ class AttemptQuiz extends Component {
 			questions: this.state.questions,
 		};
 		this.props.dispatch(attemptQuiz({ attempt }));
+		this.props.history.push("/score");
 	};
 	render() {
 		return (
@@ -102,11 +103,6 @@ class AttemptQuiz extends Component {
 																							index
 																						)
 																					}
-																					// checked={this.state.questions[
-																					// 	index
-																					// ].answers.includes(
-																					// 	option
-																					// )}
 																					id="defaultCheck1"
 																				/>
 																				<label

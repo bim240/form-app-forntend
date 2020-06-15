@@ -131,7 +131,7 @@ const attemptQuiz = (attempt) => {
 				`${url}/quiz/${attempt.quizId}/attempt`,
 				attempt
 			);
-			console.log(quizResult);
+
 			dispatch({
 				type: "ATTEMPT_QUIZ",
 				payload: quizResult.data,
