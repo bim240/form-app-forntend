@@ -13,6 +13,7 @@ import Login from "./views/auth/login";
 import Signup from "./views/auth/signup";
 import EditQuiz from "./views/quiz/editQuiz";
 import Profile from "./views/user/Profile";
+import { quizList } from "./state/actions/quizActions";
 
 import { identifyUser } from "./state/actions/authActions";
 
@@ -51,6 +52,7 @@ class App extends React.Component {
 		if (localStorage["auth-token"]) {
 			this.props.dispatch(identifyUser());
 		}
+		this.props.dispatch(quizList());
 	}
 
 	render() {
@@ -62,11 +64,7 @@ class App extends React.Component {
 				) : (
 					<>
 						<Header />
-						{currentUser.userInfo ? (
-							<ProtectedRoutes />
-						) : (
-							<PublicRoutes />
-						)}
+						{currentUser.userInfo ? <ProtectedRoutes /> : <PublicRoutes />}
 					</>
 				)}
 			</>

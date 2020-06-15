@@ -1,5 +1,4 @@
 import axios from "axios";
-import { updateQuestion } from "./quizActions";
 const url = "/api/v1";
 
 const setTokenToAxios = (token) => {
@@ -14,16 +13,17 @@ const updateUser = (data) => {
 		console.log("insideUpdateUser", data);
 
 		try {
-			// dispatch({ type: "FETCH_CURRENT_USER_START" });
-
 			let updatedUser = await axios.put(`${url}/users`, { user: data });
 
-			// dispatch({
-			//   // type: "FETCH_CURRENT_USER_SUCCESS",
-			//   payload: user.data.user,
-			// });
+			dispatch({
+				type: "FETCH_CURRENT_USER_SUCCESS",
+				payload: updatedUser.data.user,
+			});
+
 			return updatedUser;
-		} catch (error) {}
+		} catch (error) {
+			return error;
+		}
 	};
 };
 
