@@ -8,6 +8,7 @@ class ScoreBoard extends Component {
 		this.state = {
 			correctedQuestions: null,
 			totalQuestions: null,
+			player: null,
 		};
 	}
 	componentDidUpdate(prevProps) {
@@ -18,6 +19,7 @@ class ScoreBoard extends Component {
 			var result = correctedQuestions.length;
 			this.setState({
 				correctedQuestions: result,
+				player: this.props.player,
 				totalQuestions: this.props.questions.length,
 			});
 		}
@@ -34,7 +36,7 @@ class ScoreBoard extends Component {
 							<p className="contact-card__name">
 								<h4>
 									<span role="img" aria-label="name">
-										📛 {this.props.player}
+										📛 {this.state.player}
 									</span>
 								</h4>
 							</p>
