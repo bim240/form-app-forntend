@@ -2,6 +2,7 @@ import React from "react";
 import { connect } from "react-redux";
 import updateUser from "../../state/actions/userActions";
 import { validateAndReturnUser } from "../../utils";
+import { Link } from "react-router-dom";
 
 class Profile extends React.Component {
 	constructor(props) {
@@ -67,16 +68,15 @@ class Profile extends React.Component {
 	};
 
 	render() {
-		console.log(this.props.currentUser.name, "Inside Render, name");
+		this.props.quiz && console.log(this.props.quiz, "Inside Render");
 
 		return (
 			<>
+				{console.log(this.props)}
 				<h2>Profile</h2>
 				<div className="profile-and-quizzes-container">
 					<div className="quizzes-container">
-            <h1>Quizzes</h1>
-            
-            
+						<h1>Quizzes</h1>
 					</div>
 					<div className="profile-to-be-form-container">
 						{this.state.errorMsg ? <p>{this.state.errorMsg}</p> : null}
@@ -149,17 +149,62 @@ class Profile extends React.Component {
 						)}
 					</div>
 				</div>
+
+				{/* {Temporaary changes} */}
+
+				{this.props.quiz &&
+					this.props.quiz.map((quiz, i) => {
+						return (
+							<div className="col-6 col-md-4 mb-6" key={i}>
+								<div className="card" style={{ width: "18rem" }}>
+									<img
+										className="card-img-top"
+										style={{
+											height: "160px",
+											objectFit: "cover",
+											filter: " opacity(.7)",
+										}}
+										src="https://thumbs.dreamstime.com/z/quiz-test-survey-exam-vector-concept-online-laptop-education-illustration-80657742.jpg"
+										alt="Card image cap"
+									/>
+
+									<div className="card-body">
+										<h5 className="card-title">{quiz.title}</h5>
+										<Link to={`/quiz/${quiz._id}`} className="btn btn-primary">
+											Play
+										</Link>
+										{this.props.currentUser.id === quiz.authorId ? (
+											<>
+												<Link
+													to={`/quiz/${quiz._id}/edit`}
+													className="btn btn-warning mx-1"
+												>
+													Edit
+												</Link>
+												<button
+													onClick={() => this.handleDeleteQuiz(quiz._id)}
+													className="btn btn-danger mx-1"
+												>
+													Delete
+												</button>
+											</>
+										) : null}
+									</div>
+								</div>
+							</div>
+						);
+					})}
 			</>
 		);
 	}
 }
 
 function mapStateToProps(state) {
-	console.log(state.quizByCurrentUser, "inside mapStateToProps");
+	console.log(state.quiz.quizList.quizzes, "inside mapStateToProps");
 	return {
 		currentUser: state.currentUser.userInfo,
-		quizByCurrentUser: quizByCurrentUser(
-			state.quiz.quizlist,
+		quiz: quizByCurrentUser(
+			state.quiz.quizList.quizzes,
 			state.currentUser.userInfo
 		),
 	};
@@ -168,10 +213,13 @@ function mapStateToProps(state) {
 function quizByCurrentUser(quizlist, currentUser) {
 	let filteredQuiz;
 	if (quizlist) {
-		filteredQuiz = quizlist.filter(
-			(oneQuiz) => oneQuiz.authorId == currentUser.id
-		);
+		filteredQuiz = quizlist.filter((oneQuiz) => {
+			console.log(oneQuiz.authorId, currentUser.id, "inside oneQuiz");
+			return true;
+		});
 	}
+	console.log(filteredQuiz, "filteredQuiz");
+
 	return filteredQuiz;
 }
 
