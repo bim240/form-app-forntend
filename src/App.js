@@ -6,6 +6,7 @@ import HomePage from "./views/auth/HomePage";
 import { Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 import CreateQuiz from "./views/quiz/createQuiz";
+import ScoreBoard from "./views/quiz/ScoreBoard";
 import Header from "./views/common/Header";
 import AttemptQuiz from "./views/quiz/attemptQuiz";
 import Login from "./views/auth/login";
@@ -20,6 +21,7 @@ function ProtectedRoutes() {
 		<Switch>
 			<Route exact path="/" component={HomePage} />
 			<Route path="/quiz/new" component={CreateQuiz} />
+			<Route exact path="/score" component={ScoreBoard} />
 			<Route exact path="/quiz/:id" component={AttemptQuiz} />
 			<Route exact path="/quiz/:id/edit" component={EditQuiz} />
 			<Route exact path="/profile" component={Profile} />
@@ -32,7 +34,7 @@ function PublicRoutes() {
 	return (
 		<Switch>
 			<Route exact path="/" component={HomePage} />
-
+			<Route exact path="/score" component={ScoreBoard} />
 			<Route path="/login" component={Login} />
 			<Route path="/signup" component={Signup} />
 		</Switch>
@@ -60,7 +62,11 @@ class App extends React.Component {
 				) : (
 					<>
 						<Header />
-						{currentUser.userInfo ? <ProtectedRoutes /> : <PublicRoutes />}
+						{currentUser.userInfo ? (
+							<ProtectedRoutes />
+						) : (
+							<PublicRoutes />
+						)}
 					</>
 				)}
 			</>
