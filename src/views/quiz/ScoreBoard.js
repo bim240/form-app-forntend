@@ -6,7 +6,8 @@ class ScoreBoard extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			score: null,
+			correctedQuestions: null,
+			totalQuestions: null,
 		};
 	}
 	componentDidUpdate(prevProps) {
@@ -14,15 +15,17 @@ class ScoreBoard extends Component {
 			var correctedQuestions = this.props.questions.filter(
 				(question) => question.isCorrect
 			);
-			console.log(correctedQuestions);
 			var result = correctedQuestions.length;
-			this.setState({ score: result });
+			this.setState({
+				correctedQuestions: result,
+				totalQuestions: this.props.questions.length,
+			});
 		}
 	}
 	render() {
 		return (
 			<>
-				{this.state.score ? (
+				{this.state.totalQuestions ? (
 					<div className="card_container">
 						<div className="contact-card">
 							<div className="contact-card__header-image">
@@ -36,16 +39,16 @@ class ScoreBoard extends Component {
 								</h4>
 							</p>
 							<ul className="contact-card__footer">
-								<li className="contact-card__footer__link contact-card__footer__link--codepen">
-									Score: {this.state.score}
+								<li className="contact-card__footer__link contact-card__footer__link--codepen font-weight-bold">
+									Score: {this.state.correctedQuestions} /{" "}
+									{this.state.totalQuestions}
 								</li>
 							</ul>
 						</div>
 					</div>
 				) : (
-					""
+					<div>Loading...</div>
 				)}
-				;
 			</>
 		);
 	}
