@@ -20,22 +20,24 @@ function isValidQuestion(question) {
 }
 
 function validateAndReturnUser(user) {
+	console.log(user, "Inside validateAndReturnUser user"); //same
+
 	var validatedData = {};
 	//temporary change
 	if (user.email && user.email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
 		validatedData.email = user.email;
-	} else if (user.email) {
+	} else {
 		return false;
 	}
+
 	if (user.password && user.password.length > 5) {
 		validatedData.password = user.password;
-	} else if (user.password) {
-		return false;
 	}
-	if (user.name) {
+
+	if (user.name && !(user.name === "")) {
 		validatedData.name = user.name;
 	}
-	//temporary change
+
 	return validatedData;
 }
 
