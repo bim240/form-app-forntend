@@ -22,7 +22,6 @@ class Profile extends React.Component {
 	handleInput = (e) => {
 		this.setState({
 			[e.target.name]: e.target.value,
-			errorMsg: null,
 		});
 	};
 
@@ -35,24 +34,31 @@ class Profile extends React.Component {
 				password: this.state.password,
 			};
 
+			//find the changed value
+			//check if it is valid or not
+			//if valid, dispatch updateUser(validated)
+
+			console.log(user, "Inside HandleSubmit user"); //same
+
 			var validatedData = validateAndReturnUser(user);
+
+			console.log(validatedData, "Validated Data");
+
 			if (!validatedData) {
 				return this.setState({
-					errorMsg: "Please Provide Valid Username, email and Password",
+					errorMsg: "Please Provide Valid Credentials",
 				});
 			}
 
 			let res = await this.props.dispatch(updateUser(validatedData));
 
-			console.log(res);
-
 			if (!res) {
-				return this.setState({
-					errorMsg: <p>{"Something went wrong."}</p>,
+				this.setState({
+					errorMsg: "Something went wrong.",
 				});
 			}
 
-			alert("User Updated Successfully");
+			// alert("User Updated Successfully");
 			this.setState({ wantToMakeTheInput: false, password: "" });
 			// this.props.history.push("/");
 		} catch (error) {
@@ -61,12 +67,16 @@ class Profile extends React.Component {
 	};
 
 	render() {
+		console.log(this.props.currentUser.name, "Inside Render, name");
+
 		return (
 			<>
 				<h2>Profile</h2>
 				<div className="profile-and-quizzes-container">
 					<div className="quizzes-container">
-						<h1>Quizzes</h1>
+            <h1>Quizzes</h1>
+            
+            
 					</div>
 					<div className="profile-to-be-form-container">
 						{this.state.errorMsg ? <p>{this.state.errorMsg}</p> : null}
@@ -145,6 +155,24 @@ class Profile extends React.Component {
 }
 
 function mapStateToProps(state) {
-	return { currentUser: state.currentUser.userInfo };
+	console.log(state.quizByCurrentUser, "inside mapStateToProps");
+	return {
+		currentUser: state.currentUser.userInfo,
+		quizByCurrentUser: quizByCurrentUser(
+			state.quiz.quizlist,
+			state.currentUser.userInfo
+		),
+	};
 }
+
+function quizByCurrentUser(quizlist, currentUser) {
+	let filteredQuiz;
+	if (quizlist) {
+		filteredQuiz = quizlist.filter(
+			(oneQuiz) => oneQuiz.authorId == currentUser.id
+		);
+	}
+	return filteredQuiz;
+}
+
 export default connect(mapStateToProps)(Profile);
